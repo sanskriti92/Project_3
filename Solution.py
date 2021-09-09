@@ -136,3 +136,47 @@ if __name__ == "__main__":
 # payment_txn_id	Payment Transaction Confirmation Id
 # payment_txn_success	Payment Success or Failure (Y=Success. N=Failed)
 # failure_reason	Reason for payment failure
+#--------consumer.py-------------------
+from kafka import KafkaConsumer
+import pandas as pd
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType,StructField, StringType, IntegerType, DateType,FloatType
+from pyspark.sql.types import ArrayType, DoubleType, BooleanType
+from pyspark.sql.functions import *
+
+consumer = KafkaConsumer('project3')
+spark = SparkSession.builder.appName('kafka').getOrCreate()
+spark.sparkContext.setLogLevel("ERROR")
+df = spark \
+  .readStream \
+  .format("kafka") \
+  .option("kafka.bootstrap.servers", "localhost:9092") \
+  .option("subscribe", "project3") \
+  .option("startingOffsets", "earliest") \
+  .load()
+df.printSchema()
+#----------------till here it works-----------------
+#df.selectExpr("CAST(key as STRING)","CAST(value as STRING)")
+schema=StructType()\
+  .add('order_id',IntegerType())\
+  .add('customer_id',IntegerType())\
+  .add('customer_name',StringType())\
+  .add('product_id',IntegerType())\
+  .add('product_name',StringType())\
+  .add('product_category',StringType())\
+  .add('payment_type',StringType())\
+  .add('qty',IntegerType())\
+  .add('price',FloatType())\
+  .add('datetime',DateType())\
+  .add('country',StringType())\
+  .add('city',StringType())\
+  .add('ecommerce_website_name',StringType())\
+  .add('payment_txn_id',StringType())\
+  .add('payment_txn_success',StringType())\
+  .add('failure_reason',StringType())
+df.select( \
+  col("key").cast("string"),
+  from_json(col("value").cast("string"), schema))
+
+
