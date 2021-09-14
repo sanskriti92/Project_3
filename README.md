@@ -1,4 +1,4 @@
-# P3_Kafka_Spark_Streaming
+# Kafka_Spark_Streaming
 ## Project Description
 This project aims to read the streaming data and process it and store it in a parquet file. 
 
@@ -10,12 +10,13 @@ This project aims to read the streaming data and process it and store it in a pa
 - Python - version 3.8.10
 
 ## Features
-List of features
+List of features :
 - Producer program can generate 10 million distinct records randomly.
-- Consumer program can read the live streaming data and process it in batches.
+- Consumer program reads the live streaming data and process it.
+- Consumer program categorizes the data and pushes it to the respective topics.
 
-To-do list:
-- More processing to be done
+To-do list :
+- More processing has to be done
 
 ## Getting Started
 - Clone the project
@@ -34,11 +35,28 @@ $ pip install pyspark
 ```
 $ python3 -m pip install kafka-python
 ```
+- Set environment variable in .bashrc file.
+```
+$ sudo vi ~/.bashrc
+ADD "export KAFKA_HOME=/home/hdoop/kafka" at the end of the file
+$ source ~/.bashrc
+```
 
 
 ## Usage
 1. Start your linux system and start the dfs and yarn servers.
+```
+$ start-all.sh
+```
 2. Start the zookeeper server in one terminal and and kafka server in another terminal.
+```
+$ cd $KAFKA_HOME
+$ bin/zookeeper-server-start.sh config/zookeeper.properties
+```
+```
+$ cd $KAFKA_HOME
+$ bin/kafka-server-start.sh config/server.properties
+```
 3. Create a kafka topic with any name.(Remember to change the topic name in code)
 ```
 $ $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic sampleTopic --replication-factor 1 --partitions 1
@@ -49,9 +67,9 @@ $ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic sampleTopic --bootstrap-serv
 ```
 5. Open another terminal and run producer.py file.
 ```
-$ python producer.py
+$ python3 producer.py
 ```
-6. Open another terminal and run processing.py file.
+6. Open another terminal and run processing.py or category.py file.
 ```
 $ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 processing.py
 ```
