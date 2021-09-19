@@ -124,15 +124,26 @@ df4.printSchema()
 #  |-- Total_price: double (nullable = true)
 
 
+#// Filesink only support Append mode.
+result = df3\
+  .writeStream\
+  .format("csv")\
+  .trigger(processingTime="40 seconds")\
+  .option("checkpointLocation", "output/checkpoint")\
+  .option("path", "output/filesink_output")\
+  .outputMode("append")\
+  .start()
+
+
 # 3 output_modes --> append, update, complete
-result = df4.orderBy("city","payment_type") \
+cons = df4.orderBy("city","payment_type") \
     .writeStream \
-    .trigger(processingTime='5 seconds')\
+    .trigger(processingTime='20 seconds')\
     .outputMode("complete")\
     .option("truncate", "false")\
     .option("numRows", 100)\
     .format("console") \
     .start()
 
-result.awaitTermination()
+cons.awaitTermination()
 print("Stream Data Processing Application Completed.")
