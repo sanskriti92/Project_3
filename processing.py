@@ -109,6 +109,17 @@ df3.printSchema()
 #  |-- failure_reason: string (nullable = true)
 
 
+#// Filesink only support Append mode.
+result = df3\
+  .writeStream\
+  .format("csv")\
+  .trigger(processingTime="40 seconds")\
+  .option("checkpointLocation", "output/checkpoint")\
+  .option("path", "output/filesink_output")\
+  .outputMode("append")\
+  .start()
+
+
 df4 = df3.groupBy( col("city"), col("payment_type") ) \
     .agg(sum("price").alias("Total_price") ,\
     count("order_id").alias("Total_orders") ) \
@@ -122,18 +133,6 @@ df4.printSchema()
 #  |-- Total_orders: long (nullable = false)
 #  |-- payment_type: string (nullable = true)
 #  |-- Total_price: double (nullable = true)
-
-
-#// Filesink only support Append mode.
-result = df3\
-  .writeStream\
-  .format("csv")\
-  .trigger(processingTime="40 seconds")\
-  .option("checkpointLocation", "output/checkpoint")\
-  .option("path", "output/filesink_output")\
-  .outputMode("append")\
-  .start()
-
 
 # 3 output_modes --> append, update, complete
 cons = df4.orderBy("city","payment_type") \
@@ -150,7 +149,7 @@ df5 = df3.groupBy( "ecommerce_website_name" ) \
     .agg(count("order_id").alias("Number_of_orders_placed") )\
     .select("ecommerce_website_name","Number_of_orders_placed" )
 
-cons = df5.orderBy(col("Number_of_orders_placed").desc()) \
+cons1 = df5.orderBy(col("Number_of_orders_placed").desc()) \
     .writeStream \
     .trigger(processingTime='20 seconds')\
     .outputMode("complete")\
@@ -159,5 +158,5 @@ cons = df5.orderBy(col("Number_of_orders_placed").desc()) \
     .format("console") \
     .start()
 
-cons.awaitTermination()
+cons1.awaitTermination()
 print("Stream Data Processing Application Completed.")
