@@ -59,11 +59,11 @@ $ bin/kafka-server-start.sh config/server.properties
 ```
 3. Create a kafka topic with any name.(Remember to change the topic name in code)
 ```
-$ $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic sampleTopic --replication-factor 1 --partitions 1
+$ $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic project3 --replication-factor 1 --partitions 1
 ```
 4. Run consumer.
 ```
-$ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic sampleTopic --bootstrap-server localhost:9092 --from-beginning
+$ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic project3 --bootstrap-server localhost:9092 --from-beginning
 ```
 5. Open another terminal and run producer.py file.
 ```
