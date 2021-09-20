@@ -145,5 +145,19 @@ cons = df4.orderBy("city","payment_type") \
     .format("console") \
     .start()
 
+
+df5 = df3.groupBy( "ecommerce_website_name" ) \
+    .agg(count("order_id").alias("Number_of_orders_placed") )\
+    .select("ecommerce_website_name","Number_of_orders_placed" )
+
+cons = df5.orderBy(col("Number_of_orders_placed").desc()) \
+    .writeStream \
+    .trigger(processingTime='20 seconds')\
+    .outputMode("complete")\
+    .option("truncate", "false")\
+    .option("numRows", 100)\
+    .format("console") \
+    .start()
+
 cons.awaitTermination()
 print("Stream Data Processing Application Completed.")
