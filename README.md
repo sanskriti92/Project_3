@@ -63,7 +63,7 @@ $ $KAFKA_HOME/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic sa
 ```
 4. Run consumer.
 ```
-$ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic sampleTopic --bootstrap-server sandbox-hdp.hortonworks.com:6667 --from-beginning
+$ $KAFKA_HOME/bin/kafka-console-consumer.sh --topic sampleTopic --bootstrap-server localhost:9092 --from-beginning
 ```
 5. Open another terminal and run producer.py file.
 ```
