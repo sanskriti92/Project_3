@@ -1,6 +1,6 @@
 # Kafka_Spark_Streaming
 ## Project Description
-This project aims to read the streaming data and process it and store it in a parquet file. 
+This project aims to read the streaming data and process. 
 
 ## Technologies Used
 - Hadoop - version 3.2.2
